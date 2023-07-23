@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
+
+/* Title */
+
+#title-screen, #game-screen, #options-screen {
+    background-color: rgb(31, 22, 84);
+    color: white;
+    height: 100vh;
+
+    /* Other styles */
+}
+
+#body{
+    background-color: rgb(31, 22, 84);
+
+}
+
+#options-screen select {
+    font-size: 1.2em; /* Adjust this value to your liking */
+}
+
+
+#title-screen {
+    background-image: url('path-to-your-image.jpg');
+    background-color: rgb(31, 22, 84);
+    text-align: center;
+    font-size: 2em;
+    color: white;
+    padding: 50px 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+}
+
+#title-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#title-screen h1 {
+    font-size: 3em;
+    margin-bottom: 50px;
+}
+
+#title-screen h1:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.button {
+    display: inline-block;
+    background-color:rgb(31, 22, 84);;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: box-shadow 0.3s ease;
+    
+}
+
+.button:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+
+
+}
+
+#font-size, label[for="font-size"] [for="text-speed"]{
+    font-size: 1.5em;
+}
+
+#back-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#game-buttons {
+    display: flex;
+    justify-content: left;
+    gap: 5px
+}
+
+#game-screen h2 {
+    font-family: 'Cinzel', serif;
+    margin-left: 20px;
+}
+label[for="font-size"]{
+    margin-left: 20px;
+
+}
+
+#main-container {
+    display: flex;
+    justify-content: space-between;
+    height: calc(100vh - 100px); /* Adjust as needed */
+}
+
+#left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-right: 1px solid white;
+    overflow-y: auto;
+}
+
+.panel-button {
+    /* Other styles */
+    margin-bottom: 20px;
+}
+
+#console-text {
+    flex: 3;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+label {
+    display: block;
+    font-size: 1.5em; /* adjust to your preference */
+}
+
