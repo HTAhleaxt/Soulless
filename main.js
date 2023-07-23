@@ -18,6 +18,7 @@ window.onload = function() {
     var textSpeed = 20; 
     var prevScreen;
     var gameOptionsButton = document.getElementById('game-options-button');
+    
 
 
 
@@ -31,15 +32,17 @@ window.onload = function() {
         "No, it was almost pure black. Something moved. Snake-like entrails on the floor’s edge, a figure more shadow than skin. Devils?",
         "Then, I struck out. It wasn’t my intention. No, it was sheer, instinctive terror.",
         "The shadow ruptured into a mist of goo, splattering on the floor.",
-        "Suddenly, I saw more of these spectres. With eyes that were vacuums of despair, they fixated on me."
+        "Suddenly, I saw more of these spectres. With eyes that were vacuums of despair, they fixated on me.",
+        "[Battle:00]"
     ];
     
     
 
-    var ChapterOne = [
-        "This is the first piece of text.",
-        "This is the second piece of text.",
-        "This is the third piece of text.",
+    var Battle00 = [
+        "You're surrounded by 3 Shadows. You're uncertain how strong they are.",
+        "You prepare yourself to an offensive stance.",
+        "You feel stronger as ever, if not for the dizziness.",
+        "[CombatShow]",
         // Add more text snippets here...
     ];
 
@@ -103,38 +106,61 @@ window.onload = function() {
         optionsScreen.style.display = 'block';
     });
     
+    function showCombatPanel() {
+        var combatPanel = document.getElementById('combat-options');
+        combatPanel.style.display = 'flex';
+    }
+    
+    function hideCombatPanel() {
+        var combatPanel = document.getElementById('combat-options');
+        combatPanel.style.display = 'none';
+    }
     
     
 
     // Text Scroller
     function displayNextText() {
         if (textQueue.length > 0 && !isTyping) {
-            isTyping = true;
             var nextText = textQueue.shift();
-            var i = 0;
-            var textNode = document.createTextNode('');
-            textDisplay.appendChild(textNode);
-            function typeWriter() {
-                if (skipTyping) {
-                    textNode.nodeValue = nextText;
-                    finishTyping();
-                } else if (i < nextText.length) {
-                    textNode.nodeValue += nextText.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, textSpeed);
-                } else {
-                    finishTyping();
+            
+            // Check for battle keyword
+            if (nextText.startsWith("[Battle:")) {
+                // Extract battleId from the keyword
+                var battleId = nextText.split(":")[1].slice(0, -1);
+                // Start the battle with the extracted battleId
+                startBattle(battleId);
+            } else if (nextText === "[CombatShow]") {
+                // Show the combat panel
+                showCombatPanel();
+            } else {
+                isTyping = true;
+                var i = 0;
+                var textNode = document.createTextNode('');
+                textDisplay.appendChild(textNode);
+    
+                function typeWriter() {
+                    if (skipTyping) {
+                        textNode.nodeValue = nextText;
+                        finishTyping();
+                    } else if (i < nextText.length) {
+                        textNode.nodeValue += nextText.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, textSpeed);
+                    } else {
+                        finishTyping();
+                    }
                 }
-            }
-            function finishTyping() {
-                textDisplay.appendChild(document.createElement('hr'));
-                if (textDisplay.scrollHeight > textDisplay.clientHeight) {
-                    textDisplay.removeChild(textDisplay.firstChild);
+    
+                function finishTyping() {
+                    textDisplay.appendChild(document.createElement('hr'));
+                    if (textDisplay.scrollHeight > textDisplay.clientHeight) {
+                        textDisplay.removeChild(textDisplay.firstChild);
+                    }
+                    isTyping = false;
+                    skipTyping = false;
                 }
-                isTyping = false;
-                skipTyping = false;
+                typeWriter();
             }
-            typeWriter();
         } else if (isTyping) {
             skipTyping = true;
         }
@@ -151,7 +177,36 @@ window.onload = function() {
         }
     });
     
+    //Combat
 
+    function startBattle(battleId) {
+        // Initialize your battle here
+        console.log("Battle starts! Battle Id: " + battleId);
+        // Based on the battleId, load the correct battle dialogue array and begin
+        // For example:
+        textDisplay.innerHTML = '';
+
+        if (battleId === '00') {
+            textQueue = Battle00.slice();  // assuming Battle00 is a dialogue array for this battle
+        }
+        // Since you've changed textQueue, the next call to displayNextText() will start displaying battle text
+    }
+    
+    function attack() {
+        console.log("Attack button clicked");
+        // Handle the attack here...
+    }
+    
+    function magic() {
+        console.log("Magic button clicked");
+        // Handle the magic here...
+    }
+    
+    function movement() {
+        console.log("Movement button clicked");
+        // Handle the movement here...
+    }
+    
 
     // Choices
     function displayChoices() {

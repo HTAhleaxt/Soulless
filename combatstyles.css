@@ -1,0 +1,43 @@
+#attack-minigame {
+    background-color: black;
+}
+
+#circle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: white;
+    z-index: 2; /* set z-index to a higher number so it appears on top */
+}
+
+.hitCircle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+    z-index: 1; /* set z-index to a lower number so it appears behind the moving circle */
+}
+
+.hitCircle::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 1;
+    animation: ripple 1s linear;
+}
+
+
+

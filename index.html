@@ -5,6 +5,7 @@
 
     <title>Soulless</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="combatstyles.css">
     <meta charset="UTF-8">
    
 </head>
@@ -38,23 +39,35 @@
             </div>
             
         </div>
-
+        <div id="right-panel">
         <div id="console-text">
 
         </div>
-    </div>
+    
         <div id="bottom-panel">
             <!-- Dialogue options -->
             <div id="dialogue-options" style="display: none;">
                 <!-- Add your dialogue options here -->
             </div>
 
+            <div id="attack-minigame" style="display: none; position: relative; width: 1000px; height: 500px;">
+                <div id="circle"></div>
+                <svg id="tracer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></svg>
+                
+            </div>
+            
+
             <!-- Combat options -->
             <div id="combat-options" style="display: none;">
-                <!-- Add your combat options here -->
+                <button id="attackButton" onclick="attack()">Attack</button>
+                <button id="magicButton" onclick="magic()">Magic</button>
+                <button id="movementButton" onclick="movement()">Movement</button>
+
             </div>
 
         </div>
+        </div>
+    </div>
     </div>
 
     <div id="options-screen" style="display: none;">
@@ -77,6 +90,7 @@
     </div>
 
     <script src="main.js"></script>
+    <script src="combat.js"></script>
 </body>
 
 </html>
