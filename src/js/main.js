@@ -100,12 +100,6 @@ window.onload = function() {
         titleScreen.style.display = 'block';
     });
 
-    gameOptionsButton.addEventListener('click', function() {
-        prevScreen = gameScreen;
-        gameScreen.style.display = 'none';
-        optionsScreen.style.display = 'block';
-    });
-    
     function showCombatPanel() {
         var combatPanel = document.getElementById('combat-options');
         combatPanel.style.display = 'flex';
@@ -115,7 +109,6 @@ window.onload = function() {
         var combatPanel = document.getElementById('combat-options');
         combatPanel.style.display = 'none';
     }
-    
     
 
     // Text Scroller
@@ -166,10 +159,6 @@ window.onload = function() {
         }
     }
     
-    
-    
-    
-
     textDisplay.addEventListener('click', displayNextText);
     document.addEventListener('keydown', function(e) {
         if (e.key === ' ' || e.key === 'Enter') {
