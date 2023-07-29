@@ -16,6 +16,11 @@ var textSpeed = 20;
 var prevScreen;
 var gameOptionsButton = document.getElementById('game-options-button');
 let points;
+let playerHp;
+let numbersEnemy;
+let enemyOnScreen = [];
+let playerTurn;
+let attackChoice;
 
 
 var Introduction = [
@@ -62,63 +67,257 @@ var choices = [
 ];
 
 let patterns = [
-    [
-        // Z shape
-        {x: 10, y: 10, hit: false},
-        {x: 30, y: 10, hit: false},
+    [//S
+        {x: 90, y: 10, hit: false}, // Start of S (top right)
         {x: 50, y: 10, hit: false},
-        {x: 70, y: 10, hit: false},
-        {x: 90, y: 10, hit: false},
-        {x: 70, y: 30, hit: false},
-        {x: 30, y: 70, hit: false},
-        {x: 10, y: 90, hit: false},
-        {x: 30, y: 90, hit: false},
+        {x: 10, y: 10, hit: false}, // Top left
+        {x: 50, y: 50, hit: false}, // Middle of S
+        {x: 90, y: 90, hit: false}, // Bottom right
         {x: 50, y: 90, hit: false},
-        {x: 70, y: 90, hit: false},
-        {x: 90, y: 90, hit: false},
-    ],
-    [
-        // Reverse S
-        {x: 10, y: 10, hit: false},
-        {x: 30, y: 10, hit: false},
+        {x: 10, y: 90, hit: false}, // Bottom left
+        {x: 90, y: 10, hit: false}, // Start of S (top right)
         {x: 50, y: 10, hit: false},
+        {x: 10, y: 10, hit: false}, // Top left
+        {x: 50, y: 50, hit: false}, // Middle of S
+        {x: 90, y: 90, hit: false}, // Bottom right
+        {x: 50, y: 90, hit: false},
+        {x: 10, y: 90, hit: false}  // Bottom left
+    ],
+    [//Z
+        {x: 10, y: 10, hit: false}, // Start of Z (top left)
+        {x: 50, y: 10, hit: false},
+        {x: 90, y: 10, hit: false}, // Top right
+        {x: 50, y: 50, hit: false}, // Middle of Z
+        {x: 10, y: 90, hit: false}, // Bottom left
+        {x: 50, y: 90, hit: false},
+        {x: 90, y: 90, hit: false}, // Bottom right
+        {x: 10, y: 10, hit: false}, // Start of Z (top left)
+        {x: 50, y: 10, hit: false},
+        {x: 90, y: 10, hit: false}, // Top right
+        {x: 50, y: 50, hit: false}, // Middle of Z
+        {x: 10, y: 90, hit: false}, // Bottom left
+        {x: 50, y: 90, hit: false},
+        {x: 90, y: 90, hit: false}  // Bottom right
+    ],
+    [//Square
+        {x: 10, y: 10, hit: false}, // Top left corner
+        {x: 90, y: 10, hit: false}, // Top right corner
+        {x: 90, y: 90, hit: false}, // Bottom right corner
+        {x: 10, y: 90, hit: false}, // Bottom left corner
+        {x: 10, y: 10, hit: false}, // Top left corner
+        {x: 90, y: 10, hit: false}, // Top right corner
+        {x: 90, y: 90, hit: false}, // Bottom right corner
+        {x: 10, y: 90, hit: false}, // Bottom left corner
+        {x: 10, y: 10, hit: false}, // Top left corner
+        {x: 90, y: 10, hit: false}, // Top right corner
+        {x: 90, y: 90, hit: false}, // Bottom right corner
+        {x: 10, y: 90, hit: false}, // Bottom left corner
+        {x: 10, y: 10, hit: false}, // Top left corner
+        {x: 90, y: 10, hit: false}  // Top right corner
+    ],
+    [// Infinity
+        {x: 40, y: 30, hit: false}, 
+        {x: 50, y: 20, hit: false},
+        {x: 60, y: 30, hit: false},
+        {x: 50, y: 40, hit: false},
+        {x: 40, y: 30, hit: false},
+        {x: 50, y: 20, hit: false},
+        {x: 60, y: 30, hit: false}, // Top right loop
+        {x: 70, y: 40, hit: false},
+        {x: 60, y: 50, hit: false},
+        {x: 50, y: 40, hit: false},
+        {x: 40, y: 30, hit: false},
+        {x: 50, y: 20, hit: false},
+        {x: 60, y: 30, hit: false},
+        {x: 70, y: 40, hit: false}
+    ],
+    [//Crescent Moon
+        {x: 60, y: 20, hit: false},
+        {x: 70, y: 30, hit: false},
+        {x: 70, y: 40, hit: false},
+        {x: 60, y: 50, hit: false},
+        {x: 50, y: 40, hit: false},
+        {x: 50, y: 30, hit: false},
+        {x: 60, y: 20, hit: false},
+        {x: 70, y: 30, hit: false},
+        {x: 70, y: 40, hit: false},
+        {x: 60, y: 50, hit: false},
+        {x: 50, y: 40, hit: false},
+        {x: 50, y: 30, hit: false},
+        {x: 60, y: 20, hit: false},
+        {x: 70, y: 30, hit: false}
+    ],
+    [//Cross
+        {x: 30, y: 10, hit: false}, // Top left
+        {x: 50, y: 30, hit: false},
+        {x: 70, y: 10, hit: false}, // Top right
+        {x: 70, y: 30, hit: false},
+        {x: 50, y: 50, hit: false}, // Center
+        {x: 30, y: 70, hit: false}, // Bottom left
+        {x: 30, y: 50, hit: false},
+        {x: 10, y: 30, hit: false},
+        {x: 30, y: 10, hit: false}, // Top left
+        {x: 50, y: 30, hit: false},
+        {x: 70, y: 50, hit: false},
+        {x: 50, y: 70, hit: false}, // Bottom
+        {x: 30, y: 50, hit: false},
+        {x: 10, y: 30, hit: false}
+    ],
+    [//Arrow
+        {x: 50, y: 10, hit: false}, // Arrow tip
+        {x: 50, y: 30, hit: false},
+        {x: 40, y: 30, hit: false},
+        {x: 60, y: 30, hit: false},
+        {x: 60, y: 50, hit: false}, // Arrow tail right
+        {x: 40, y: 50, hit: false}, // Arrow tail left
+        {x: 40, y: 30, hit: false},
+        {x: 50, y: 30, hit: false},
+        {x: 50, y: 10, hit: false}, // Arrow tip
+        {x: 50, y: 30, hit: false},
+        {x: 40, y: 30, hit: false},
+        {x: 60, y: 30, hit: false},
+        {x: 60, y: 50, hit: false}, // Arrow tail right
+        {x: 40, y: 50, hit: false}  // Arrow tail left
+    ],
+    [//Wave
+        {x: 10, y: 30, hit: false},
+        {x: 20, y: 20, hit: false},
+        {x: 30, y: 10, hit: false},
+        {x: 40, y: 20, hit: false},
+        {x: 50, y: 30, hit: false},
+        {x: 60, y: 40, hit: false},
+        {x: 70, y: 50, hit: false},
+        {x: 80, y: 60, hit: false},
+        {x: 90, y: 70, hit: false},
+        {x: 80, y: 60, hit: false},
+        {x: 70, y: 50, hit: false},
+        {x: 60, y: 40, hit: false},
+        {x: 50, y: 30, hit: false},
+        {x: 40, y: 20, hit: false}
+    ],
+    [//Zigzag
+        {x: 10, y: 10, hit: false},
+        {x: 30, y: 30, hit: false},
+        {x: 50, y: 10, hit: false},
+        {x: 70, y: 30, hit: false},
+        {x: 90, y: 10, hit: false},
+        {x: 90, y: 30, hit: false},
+        {x: 70, y: 50, hit: false},
+        {x: 50, y: 30, hit: false},
+        {x: 30, y: 50, hit: false},
+        {x: 10, y: 30, hit: false},
+        {x: 10, y: 50, hit: false},
+        {x: 30, y: 70, hit: false},
+        {x: 50, y: 50, hit: false},
+        {x: 70, y: 70, hit: false}
+    ],
+    [//Hexagon
+        {x: 40, y: 10, hit: false}, // Top left
+        {x: 60, y: 10, hit: false}, // Top right
+        {x: 70, y: 30, hit: false},
+        {x: 60, y: 50, hit: false}, // Middle right
+        {x: 40, y: 50, hit: false}, // Middle left
+        {x: 30, y: 30, hit: false},
+        {x: 40, y: 10, hit: false}, // Top left
+        {x: 60, y: 10, hit: false}, // Top right
+        {x: 70, y: 30, hit: false},
+        {x: 60, y: 50, hit: false}, // Middle right
+        {x: 40, y: 50, hit: false}, // Middle left
+        {x: 30, y: 30, hit: false},
+        {x: 40, y: 10, hit: false}, // Top left
+        {x: 60, y: 10, hit: false}  // Top right
+    ],
+    [//Spiral
+        {x: 50, y: 50, hit: false}, // Center
+        {x: 60, y: 50, hit: false},
+        {x: 70, y: 40, hit: false},
+        {x: 60, y: 30, hit: false},
+        {x: 40, y: 30, hit: false}, 
+        {x: 30, y: 40, hit: false}, 
+        {x: 40, y: 50, hit: false}, // Center
+        {x: 50, y: 60, hit: false},
+        {x: 60, y: 70, hit: false},
+        {x: 70, y: 80, hit: false},
+        {x: 80, y: 90, hit: false}, 
+        {x: 90, y: 80, hit: false}, 
+        {x: 80, y: 70, hit: false},
+        {x: 70, y: 60, hit: false}
+    ],
+    [//Diamond
+        {x: 50, y: 10, hit: false}, // Top
+        {x: 60, y: 20, hit: false},
+        {x: 70, y: 30, hit: false},
+        {x: 80, y: 40, hit: false},
+        {x: 90, y: 50, hit: false}, // Right
+        {x: 80, y: 60, hit: false},
+        {x: 70, y: 70, hit: false},
+        {x: 60, y: 80, hit: false},
+        {x: 50, y: 90, hit: false}, // Bottom
+        {x: 40, y: 80, hit: false}, 
+        {x: 30, y: 70, hit: false}, 
+        {x: 20, y: 60, hit: false},
+        {x: 10, y: 50, hit: false}, // Left
+        {x: 20, y: 40, hit: false}
+    ],
+    [//Star
+        {x: 50, y: 10, hit: false}, // Top
+        {x: 60, y: 30, hit: false},
+        {x: 80, y: 30, hit: false},
+        {x: 65, y: 50, hit: false},
+        {x: 70, y: 70, hit: false},
+        {x: 50, y: 55, hit: false}, // Middle
+        {x: 30, y: 70, hit: false},
+        {x: 35, y: 50, hit: false},
+        {x: 20, y: 30, hit: false},
+        {x: 40, y: 30, hit: false}, // Top
+        {x: 50, y: 10, hit: false}, 
+        {x: 60, y: 30, hit: false},
+        {x: 80, y: 30, hit: false},
+        {x: 65, y: 50, hit: false}
+    ],
+    [//Ellipse
+        {x: 50, y: 10, hit: false}, // Top
+        {x: 70, y: 20, hit: false},
+        {x: 90, y: 40, hit: false},
+        {x: 90, y: 60, hit: false}, 
+        {x: 70, y: 80, hit: false}, 
+        {x: 50, y: 90, hit: false}, // Bottom
+        {x: 30, y: 80, hit: false},
+        {x: 10, y: 60, hit: false}, 
+        {x: 10, y: 40, hit: false}, 
+        {x: 30, y: 20, hit: false}, // Top
+        {x: 50, y: 10, hit: false}, 
+        {x: 70, y: 20, hit: false},
+        {x: 90, y: 40, hit: false},
+        {x: 90, y: 60, hit: false}
+    ],
+    [//Rectangle
+        {x: 10, y: 10, hit: false}, // Top left
+        {x: 30, y: 10, hit: false},
+        {x: 50, y: 10, hit: false}, // Top right
         {x: 70, y: 10, hit: false},
         {x: 90, y: 10, hit: false},
         {x: 90, y: 30, hit: false},
-        {x: 90, y: 50, hit: false},
+        {x: 90, y: 50, hit: false}, // Bottom right
         {x: 70, y: 50, hit: false},
         {x: 50, y: 50, hit: false},
         {x: 30, y: 50, hit: false},
-        {x: 10, y: 50, hit: false},
-        {x: 10, y: 90, hit: false},
-        {x: 30, y: 90, hit: false},
-        {x: 50, y: 90, hit: false},
-        {x: 70, y: 90, hit: false},
-        {x: 90, y: 90, hit: false},
-    ],
-    [
-        // Square
-        {x: 10, y: 10, hit: false},
-        {x: 30, y: 10, hit: false},
-        {x: 50, y: 10, hit: false},
-        {x: 70, y: 10, hit: false},
-        {x: 90, y: 10, hit: false},
-        {x: 90, y: 30, hit: false},
-        {x: 90, y: 50, hit: false},
-        {x: 90, y: 70, hit: false},
-        {x: 90, y: 90, hit: false},
-        {x: 70, y: 90, hit: false},
-        {x: 50, y: 90, hit: false},
-        {x: 30, y: 90, hit: false},
-        {x: 10, y: 90, hit: false},
-        {x: 10, y: 70, hit: false},
+        {x: 10, y: 50, hit: false}, // Bottom left
         {x: 10, y: 30, hit: false},
         {x: 10, y: 10, hit: false},
-    ],
+        {x: 30, y: 10, hit: false}
+    ]
     // Add more patterns here...
 ];
 
-
+function battleCycle(){
+    console.log("Battle started!");
+    EnemyLoad();
+    HealthCheck();
+    SpecialCheck();
+    playerTurn = true;
+    startRhythmGame();
+}
 
 function getRandomPattern() {
 let randomIndex = Math.floor(Math.random() * patterns.length);
@@ -141,7 +340,7 @@ function startRhythmGame() {
         }
     
         // Exclude the first 3 points from being hit targets
-        let indices = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        let indices = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
         indices.sort(() => Math.random() - 0.5);
     
         // Set hit targets
@@ -191,10 +390,10 @@ function startRhythmGame() {
                 let hitCircleRect = hitCircle.getBoundingClientRect();
             
                 // Check if the center of the white circle is inside the expanded hit area of the red circle
-                if (circleRect.left + circleRect.width / 2 >= hitCircleRect.left - 100
-                    && circleRect.right - circleRect.width / 2 <= hitCircleRect.right + 100
-                    && circleRect.top + circleRect.height / 2 >= hitCircleRect.top - 100
-                    && circleRect.bottom - circleRect.height / 2 <= hitCircleRect.bottom + 100) {
+                if (circleRect.left + circleRect.width / 2 >= hitCircleRect.left - 80
+                    && circleRect.right - circleRect.width / 2 <= hitCircleRect.right + 80
+                    && circleRect.top + circleRect.height / 2 >= hitCircleRect.top - 80
+                    && circleRect.bottom - circleRect.height / 2 <= hitCircleRect.bottom + 80) {
                 
                     // Remove the red circle and create a ripple effect
                     // Calculate the x, y relative to the game div
